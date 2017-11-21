@@ -159,7 +159,7 @@ namespace FluentMigrator.Runner.Initialization
             var singleAssembly = (assemblyCollection != null && assemblyCollection.Assemblies != null && assemblyCollection.Assemblies.Length == 1) ? assemblyCollection.Assemblies[0] : null;
             var singleAssemblyLocation = singleAssembly != null ? singleAssembly.Location : string.Empty;
 
-            var manager = new ConnectionStringManager(new NetConfigManager(), RunnerContext.Announcer, RunnerContext.Connection,
+            var manager = new ConnectionStringManager(RunnerContext.Announcer, RunnerContext.Connection,
                                                       RunnerContext.ConnectionStringConfigPath, singleAssemblyLocation,
                                                       RunnerContext.Database);
 

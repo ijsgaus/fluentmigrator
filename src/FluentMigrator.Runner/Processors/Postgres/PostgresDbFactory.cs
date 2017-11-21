@@ -13,7 +13,16 @@ namespace FluentMigrator.Runner.Processors.Postgres
 
         protected override DbProviderFactory CreateFactory()
         {
-            var assembly = AppDomain.CurrentDomain.Load("Npgsql");
+            Assembly assembly;
+            try
+            {
+                assembly = Assembly.LoadFrom("Npgsql.dll");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Here " + ex.Message);
+                throw;
+            }
             var type = assembly.GetType("Npgsql.NpgsqlFactory");
             var field = type.GetField("Instance", BindingFlags.Static | BindingFlags.Public);
 
