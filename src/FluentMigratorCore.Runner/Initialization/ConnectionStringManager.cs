@@ -1,0 +1,96 @@
+﻿using System;
+using System.Configuration;
+using System.Text.RegularExpressions;
+using FluentMigrator.Exceptions;
+
+namespace FluentMigrator.Runner.Initialization
+{
+    /// <summary>
+    /// Locates connection strings by name in assembly's config file or machine.config
+    /// If no connection matches it uses the specified connection string as valid connection
+    /// </summary>
+    public class ConnectionStringManager
+    {
+        private readonly IAnnouncer announcer;
+        private readonly string assemblyLocation;
+        private readonly string database;
+        
+        private readonly string connection;
+        private Func<string> machineNameProvider = () => Environment.MachineName;
+        
+
+        private static readonly Regex matchPwd =
+            new Regex("(PWD=|PASSWORD=)([^;]*);", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+
+        public ConnectionStringManager(IAnnouncer announcer, string connection,
+           string assemblyLocation, string database)
+        {
+            this.connection = connection;
+            
+            this.database = database;
+            this.assemblyLocation = assemblyLocation;
+            
+        
+            this.announcer = announcer;
+        }
+
+        public string ConnectionString { get; private set; }
+
+        public Func<string> MachineNameProvider
+        {
+            get { return machineNameProvider; }
+            set { machineNameProvider = value; }
+        }
+
+
+        public void LoadConnectionString()
+        {
+
+
+            if (!string.IsNullOrEmpty(connection))
+                ConnectionString = connection;
+
+            OutputResults();
+        }
+
+/*
+private void LoadConnectionStringFromConfigurationFile(Configuration configurationFile)
+{
+    var connections = configurationFile.ConnectionStrings.ConnectionStrings;
+
+    if (connections == null || connections.Count <= 0)
+        return;
+
+    ConnectionStringSettings connectionString;
+
+    if (string.IsNullOrEmpty(connection))
+        connectionString = connections[MachineNameProvider()];
+    else
+        connectionString = connections[connection];
+
+    ReadConnectionString(connectionString, configurationFile.FilePath);
+}
+
+private void ReadConnectionString(ConnectionStringSettings connectionSetting, string configurationFile)
+{
+    if (connectionSetting == null) return;
+
+    connection = connectionSetting.Name;
+    ConnectionString = connectionSetting.ConnectionString;
+    configFile = configurationFile;
+    notUsingConfig = false;
+}*/
+
+        private void OutputResults()
+        {
+            if (string.IsNullOrEmpty(ConnectionString))
+                throw new UndeterminableConnectionException(
+                    "Unable to resolve any connectionstring using parameters \"/connection\" and \"/configPath\"");
+
+            announcer.Say(
+                 string.Format("Using Database {0} and Connection String {1}", database,
+                    matchPwd.Replace(ConnectionString, "$1********;"))
+                );
+        }
+    }
+}

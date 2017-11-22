@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project>
+    <PropertyGroup>
+        <!--<Authors>Ivan Simongauz</Authors>
+        <Copyright>Ivan Simongauz 2017</Copyright>
+        <PackageProjectUrl>https://github.com/walnut-brain/Astral</PackageProjectUrl>
+        <PackageLicenseUrl>https://github.com/walnut-brain/Astral/blob/master/LICENSE</PackageLicenseUrl>-->
+        <PackageTags>FluentMigrator Core</PackageTags>
+        <VersionPrefix>0.1</VersionPrefix>
+        <VersionSuffix>
+        </VersionSuffix>
+    </PropertyGroup>
+    
+</Project>    

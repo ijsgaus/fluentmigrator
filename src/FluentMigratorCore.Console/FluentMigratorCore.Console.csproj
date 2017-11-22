@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Description>This is a fork of original FluentMigrator: https://github.com/fluentmigrator/fluentmigrator </Description>
+  </PropertyGroup>
+  
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFrameworks>netcoreapp2.0;net451</TargetFrameworks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FluentMigratorCore.Runner\FluentMigratorCore.Runner.csproj" />
+    <ProjectReference Include="..\FluentMigratorCore\FluentMigratorCore.csproj" />
+  </ItemGroup>
+
+</Project>

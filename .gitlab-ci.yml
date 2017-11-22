@@ -1,0 +1,65 @@
+stages:
+- build
+- publish
+
+
+#.build_template_docker: &build_docker
+#  tags:
+#  - docker 
+#  stage: build
+#  image: microsoft/dotnet:latest    
+#  except:  
+#  - branches  
+#  - triggers
+#  script:
+#  - echo Restoring packages
+#  - dotnet restore ./$PROJECT.sln
+#  - echo Building
+#  - dotnet pack ./$PROJECT.sln -c debug --include-symbols --include-source -o ./artifacts
+#  artifacts:
+#    expire_in: 31d
+#    paths:
+#    - artifacts/*.nupkg
+
+build:
+  variables: 
+    PROJECT: FluentMigratorCore
+  tags:
+  - net47
+  - netstandard2.0
+  stage: build
+#  except:  
+#  - branches  
+#  - triggers
+ 
+  script:
+  - echo Restoring packages
+  - dotnet restore "%cd%\%PROJECT%.sln"
+  - echo Building
+  - dotnet pack "%cd%\%PROJECT%.sln" -c Debug --include-symbols --include-source -o "%cd%\artifacts\"  
+  - echo "Publishing nuget packages"
+  
+  artifacts:
+    expire_in: 31d
+    paths:
+    - artifacts/*.nupkg
+
+publish:
+  variables: 
+    PROJECT: FluentMigratorCore
+#  when: manual
+  tags:
+  - net47
+  - netstandard2.0
+  stage: publish
+#  except:
+#  - branches
+#  - triggers  
+  only:
+  - tags
+  - manual
+  script:
+  - echo Restoring packages
+  - dotnet nuget push --force-english-output -s YouDo -k "%NUGET_TOKEN%" "%cd%"\artifacts\*.nupkg"
+
+
